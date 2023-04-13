@@ -37,3 +37,13 @@ build:remote-ubuntu-22-04 --extra_execution_platforms=//tools/remote-toolchains:
 
 # When running bare executors on your own host machine.
 build:remote-local --config=remote-exec
+
+# # Let's use the bare cache to find CAS/AC objects
+# - This will be used by Buildbuddy, and may not work with the proxies.
+# build --remote_cache=grpc://white:8991
+
+build --noremote_accept_cached
+build --config=remote-ubuntu-22-04
+build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
+build --bes_results_url=http://white:8080/invocation/
+build --bes_backend=grpc://white:1985

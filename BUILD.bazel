@@ -1,6 +1,41 @@
 load("@bazel_gazelle//:def.bzl", "gazelle")
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 
+genrule(
+    name = "with-docker",
+    outs = ["with-docker.out"],
+    cmd = """echo "hi" > $(OUTS)""",
+    # tags = ["no-cache"],
+)
+
+# genrule(
+#     name = "with-ubuntu-docker",
+#     outs =["with-ubuntu.out"],
+#     cmd = """echo "hi">  $(OUTS)""",
+#     exec_properties = {
+#         "container-image": "docker://ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448",
+#         "OSFamily": "Linux",
+#     },
+#     # tags = ["no-cache"],
+# )
+
+# genrule(
+#     name = "with-busybox-docker",
+#     outs =["with-busybox.out"],
+#     cmd = """echo "hi" > $(OUTS)""",
+#     exec_properties = {
+#         "container-image": "docker://ghcr.io/hlesey/busybox:1.35.0",
+#         "OSFamily": "Linux",
+#     },
+#     # tags = ["no-cache"],
+# )
+
+genrule(
+    name = "with-docker-cache",
+    outs = ["with-docker-cache.out"],
+    cmd = """echo "hi" > $(OUTS)""",
+)
+
 # gazelle:prefix github.com/buildbarn/bb-deployments
 # gazelle:exclude dummy_for_dependencies.go
 gazelle(
