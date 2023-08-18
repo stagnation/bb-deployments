@@ -3,8 +3,13 @@ Goma and Buildbarn
 
 This follows the `goma and buildgrid`_ documentation,
 to use `goma`'s RBE proxy to the standard bb-deployment.
-I got caught up in server errors,
-so this serves as a starting point.
+We will follow the `buildgrid` sequence, but make some adjustments,
+the text below is mostly expansion on what is done for `buildgrid`,
+with more details.
+Though I did fail, and the section `paths diverge`_ goes into the differences,
+and my trouble-shooting following that.
+
+.. TODO: is it fixed?
 
 Setup
 =====
@@ -49,6 +54,7 @@ will use this to install dependencies for `chromium` somewhere.
 .. _additional building info: https://chromium.googlesource.com/chromium/src/+/master/docs/linux/build_instructions.md
 .. _setup: https://kubala.github.io/docs/setting-up-rbe
 .. _buildgrid guide: `goma and buildgrid`_
+.. _bromite guide: https://github.com/bromite/bromite/discussions/1032
 
 Setup Chromium
 --------------
@@ -114,6 +120,8 @@ so avoid adding it globally.
 
 Run the goma server
 -------------------
+
+We checkout out goma server 0.13, as used by the guide.
 
 First, to work with `Buildbarn` we need a simple patch,
 patch the `OSFamily` platform property to lowercase::
