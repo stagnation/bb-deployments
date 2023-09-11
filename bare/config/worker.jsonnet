@@ -15,8 +15,16 @@ local common = import 'common.libsonnet';
       cacheReplacementPolicy: 'LEAST_RECENTLY_USED',
     },
     runners: [{
-      # https://github.com/grpc/grpc/blob/master/doc/naming.md
+      // https://github.com/grpc/grpc/blob/master/doc/naming.md
       endpoint: { address: 'unix:worker/runner' },
+      inputRootCharacterDeviceNodes: [
+        'full',
+        'null',
+        'random',
+        'tty',
+        'urandom',
+        'zero',
+      ],
       concurrency: 8,
       platform: {},
       workerId: {

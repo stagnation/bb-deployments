@@ -68,6 +68,14 @@ local common = import 'common.libsonnet';
       endpoint: { address: 'unix:///worker/runner' },
       concurrency: 8,
       instanceNamePrefix: 'fuse',
+      inputRootCharacterDeviceNodes: [
+        'full',
+        'null',
+        'random',
+        'tty',
+        'urandom',
+        'zero',
+      ],
       platform: {
         properties: [
           { name: 'OSFamily', value: 'linux' },
