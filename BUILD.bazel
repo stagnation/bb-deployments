@@ -1,8 +1,30 @@
+load("@aspect_bazel_lib//lib:run_binary.bzl", "run_binary")
 load("@bazel_gazelle//:def.bzl", "gazelle")
-load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 
 # gazelle:prefix github.com/buildbarn/bb-deployments
 # gazelle:exclude dummy_for_dependencies.go
 gazelle(
     name = "gazelle",
+)
+
+# $ bazel build //cmd/ls-proc
+# $ cp -f bazel-bin/cmd/ls-proc/ls-proc_/ls-proc ls-proc
+run_binary(
+    name = "introspection",
+    outs = ["out"],
+    args = ["$(location out)"],
+    execution_requirements = {
+        "no-cache": "1",
+    },
+    tool = ":ls-proc",
+    srcs = [
+        # env is required in path resolution for chroot actions.
+        "usr/bin/env",
+        # Not strictly needed, but symmetric with sys and proc.
+        "dev/dummy",
+        # Send a directory for /sys and /proc
+        # Bazel wants a file for it to send the directory.
+        "sys/dummy",
+        "proc/dummy",
+    ],
 )
