@@ -129,6 +129,16 @@ local_repository(
     path = "tools/remote-toolchains/ubuntu-act-22-04/local_config_sh",
 )
 
+local_repository(
+    name = "remote_windows_config_cc",
+    path = "tools/remote-toolchains/windows/local_config_cc",
+)
+
+local_repository(
+    name = "remote_windows_config_sh",
+    path = "tools/remote-toolchains/windows/local_config_sh",
+)
+
 # abseil-cpp
 http_archive(
     name = "com_google_absl",

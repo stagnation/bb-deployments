@@ -43,7 +43,7 @@ build:remote-local --config=remote-exec
 # build --remote_cache=grpc://white:8991
 
 build --noremote_accept_cached
-build --config=remote-ubuntu-22-04
+# build --config=remote-ubuntu-22-04
 build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
-build --bes_results_url=http://white:8080/invocation/
-build --bes_backend=grpc://white:1985
+# build --bes_results_url=http://white:8080/invocation/
+# build --bes_backend=grpc://white:1985

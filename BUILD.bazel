@@ -41,3 +41,13 @@ genrule(
 gazelle(
     name = "gazelle",
 )
+
+genrule(
+    name = "windows",
+    tags = ["manual"],
+    cmd = """echo "hi" > $(OUTS)""",
+    outs = ["windows.txt"],
+    exec_properties = {
+        "OSFamily": "windows",
+    },
+)

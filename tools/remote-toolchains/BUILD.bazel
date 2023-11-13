@@ -14,20 +14,37 @@ constraint_value(
     constraint_setting = ":container-image",
 )
 
-REMOTE_TARGET_CONSTRAINTS = [
+REMOTE_WINDOWS_TARGET_CONSTRAINTS = [
+    "@platforms//cpu:x86_64",
+    "@platforms//os:windows",
+]
+REMOTE_LINUX_TARGET_CONSTRAINTS = [
     "@platforms//cpu:x86_64",
     "@platforms//os:linux",
 ]
 
-REMOTE_EXEC_CONSTRAINTS = [
+REMOTE_WINDOWS_EXEC_CONSTRAINTS = [
+    "@platforms//cpu:x86_64",
+    "@platforms//os:windows",
+    ":windows",
+]
+REMOTE_LINUX_EXEC_CONSTRAINTS = [
     "@platforms//cpu:x86_64",
     "@platforms//os:linux",
     ":ubuntu-act-22-04",
 ]
 
 platform(
+    name = "windows-platform",
+    constraint_values = REMOTE_WINDOWS_EXEC_CONSTRAINTS,
+    exec_properties = {
+        "OSFamily": "windows",
+    },
+)
+
+platform(
     name = "ubuntu-act-22-04-platform",
-    constraint_values = REMOTE_EXEC_CONSTRAINTS,
+    constraint_values = REMOTE_LINUX_EXEC_CONSTRAINTS,
     exec_properties = {
         "container-image": "docker://ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448",
         "OSFamily": "linux",
@@ -35,16 +52,23 @@ platform(
 )
 
 toolchain(
-    name = "cc-toolchain-k8",
-    exec_compatible_with = REMOTE_EXEC_CONSTRAINTS,
-    target_compatible_with = REMOTE_TARGET_CONSTRAINTS,
+    name = "cc-windows-toolchain-k8",
+    exec_compatible_with = REMOTE_WINDOWS_EXEC_CONSTRAINTS,
+    target_compatible_with = REMOTE_WINDOWS_TARGET_CONSTRAINTS,
+    toolchain = "@remote_windows_config_cc//:cc-compiler-k8",
+    toolchain_type = "@rules_cc//cc:toolchain_type",
+)
+toolchain(
+    name = "cc-linux-toolchain-k8",
+    exec_compatible_with = REMOTE_LINUX_EXEC_CONSTRAINTS,
+    target_compatible_with = REMOTE_LINUX_TARGET_CONSTRAINTS,
     toolchain = "@remote_config_cc//:cc-compiler-k8",
     toolchain_type = "@rules_cc//cc:toolchain_type",
 )
 
 toolchain(
     name = "cc-toolchain-armeabi-v7a",
-    exec_compatible_with = REMOTE_EXEC_CONSTRAINTS,
+    exec_compatible_with = REMOTE_LINUX_EXEC_CONSTRAINTS,
     target_compatible_with = [
         "@platforms//cpu:arm",
         "@platforms//os:android",
@@ -53,9 +77,16 @@ toolchain(
     toolchain_type = "@rules_cc//cc:toolchain_type",
 )
 
+
+toolchain(
+    name = "sh-windows-toolchain",
+    exec_compatible_with = REMOTE_LINUX_EXEC_CONSTRAINTS,
+    toolchain = "@remote_windows_config_sh//:local_sh",
+    toolchain_type = "@bazel_tools//tools/sh:toolchain_type",
+)
 toolchain(
     name = "sh-toolchain",
-    exec_compatible_with = REMOTE_EXEC_CONSTRAINTS,
+    exec_compatible_with = REMOTE_LINUX_EXEC_CONSTRAINTS,
     toolchain = "@remote_config_sh//:local_sh",
     toolchain_type = "@bazel_tools//tools/sh:toolchain_type",
 )
