@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This becomes the BUILD file for @local_config_cc// under Windows.
+# This becomes the BUILD file for @local_windows_config_cc// under Windows.
 
 package(default_visibility = ["//visibility:public"])
 

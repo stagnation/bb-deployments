@@ -12,7 +12,7 @@ toolchain(
     name = "cc-toolchain-x64_windows",
     exec_compatible_with = HOST_CONSTRAINTS,
     target_compatible_with = HOST_CONSTRAINTS,
-    toolchain = "@local_config_cc//:cc-compiler-x64_windows",
+    toolchain = "@local_windows_config_cc//:cc-compiler-x64_windows",
     toolchain_type = "@rules_cc//cc:toolchain_type",
 )
 
@@ -23,6 +23,6 @@ toolchain(
         "@platforms//cpu:arm",
         "@platforms//os:android",
     ],
-    toolchain = "@local_config_cc//:cc-compiler-armeabi-v7a",
+    toolchain = "@local_windows_config_cc//:cc-compiler-armeabi-v7a",
     toolchain_type = "@rules_cc//cc:toolchain_type",
 )

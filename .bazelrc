@@ -34,6 +34,7 @@ build:remote-exec --extra_toolchains=//tools/remote-toolchains:all
 # When running Ubuntu 22.04 executors.
 build:remote-ubuntu-22-04 --config=remote-exec
 build:remote-ubuntu-22-04 --extra_execution_platforms=//tools/remote-toolchains:ubuntu-act-22-04-platform
+build:windows --extra_execution_platforms=//tools/remote-toolchains:windows-platform
 
 # When running bare executors on your own host machine.
 build:remote-local --config=remote-exec
