@@ -117,9 +117,10 @@ rules_cc_dependencies()
 
 rules_cc_toolchains()
 
-# register_toolchains(
-#     # "@local_windows_config_cc_toolchains//:all"
-# )
+register_toolchains(
+    "@local_windows_config_cc_toolchains//:all",
+    "@local_ubuntu_config_cc_toolchains//:all",
+)
 
 # Import toolchain repositories for remote executions, but register the
 # toolchains using --extra_toolchains on the command line to get precedence.
@@ -133,6 +134,12 @@ local_repository(
     path = "tools/remote-toolchains/ubuntu-act-22-04/local_config_sh",
 )
 
+local_repository(
+    name = "local_ubuntu_config_cc_toolchains",
+    path = "tools/remote-toolchains/ubuntu-act-22-04/local_config_cc_toolchains",
+)
+
+## WINDOWS
 local_repository(
     name = "remote_windows_config_cc",
     path = "tools/remote-toolchains/windows/local_config_cc",
@@ -149,6 +156,10 @@ local_repository(
 local_repository(
     name = "local_windows_config_sh",
     path = "tools/remote-toolchains/windows/local_config_sh",
+)
+local_repository(
+    name = "local_windows_config_cc_toolchains",
+    path = "tools/remote-toolchains/windows/local_config_cc_toolchains",
 )
 
 # abseil-cpp

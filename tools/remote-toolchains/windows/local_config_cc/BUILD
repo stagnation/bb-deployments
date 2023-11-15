@@ -40,7 +40,10 @@ filegroup(
 
 filegroup(
     name = "msvc_compiler_files",
-    srcs = [":builtin_include_directory_paths_msvc"]
+    srcs = [
+        ":builtin_include_directory_paths_msvc",
+        ":msvc-wrappers",
+    ],
 )
 
 # Hardcoded toolchain, legacy behaviour.
@@ -84,7 +87,8 @@ cc_toolchain_config(
     abi_libc_version = "local",
     cxx_builtin_include_directories = [        "c:/program files/git/usr/",
         ],
-    tool_paths = {"ar": "c:/program files/git/usr/bin/ar",
+    tool_paths = {
+        "ar": "c:/program files/git/usr/bin/ar",
         "compat-ld": "c:/program files/git/usr/bin/compat-ld",
         "cpp": "c:/program files/git/usr/bin/cpp",
         "dwp": "c:/program files/git/usr/bin/dwp",
@@ -94,7 +98,8 @@ cc_toolchain_config(
         "nm": "c:/program files/git/usr/bin/nm",
         "objcopy": "c:/program files/git/usr/bin/objcopy",
         "objdump": "c:/program files/git/usr/bin/objdump",
-        "strip": "c:/program files/git/usr/bin/strip"},
+        "strip": "c:/program files/git/usr/bin/strip"
+    },
     tool_bin_path = "c:/program files/git/usr/bin",
     dbg_mode_debug_flag = "/DEBUG:FULL",
     fastbuild_mode_debug_flag = "/DEBUG:FASTLINK",
@@ -142,7 +147,8 @@ cc_toolchain_config(
     tool_bin_path = "c:/program files/git/mingw64/bin",
     cxx_builtin_include_directories = [        "c:/program files/git/mingw64/",
         ],
-    tool_paths = {"ar": "c:/program files/git/mingw64/bin/ar",
+    tool_paths = {
+        "ar": "c:/program files/git/mingw64/bin/ar",
         "compat-ld": "c:/program files/git/mingw64/bin/compat-ld",
         "cpp": "c:/program files/git/mingw64/bin/cpp",
         "dwp": "c:/program files/git/mingw64/bin/dwp",
@@ -152,7 +158,8 @@ cc_toolchain_config(
         "nm": "c:/program files/git/mingw64/bin/nm",
         "objcopy": "c:/program files/git/mingw64/bin/objcopy",
         "objdump": "c:/program files/git/mingw64/bin/objdump",
-        "strip": "c:/program files/git/mingw64/bin/strip"},
+        "strip": "c:/program files/git/mingw64/bin/strip"
+    },
     dbg_mode_debug_flag = "/DEBUG:FULL",
     fastbuild_mode_debug_flag = "/DEBUG:FASTLINK",
 )
@@ -176,7 +183,7 @@ cc_toolchain(
     name = "cc-compiler-x64_windows",
     toolchain_identifier = "msvc_x64",
     toolchain_config = ":msvc_x64",
-    all_files = ":empty",
+    all_files = ":msvc_wrappers",
     ar_files = ":empty",
     as_files = ":msvc_compiler_files",
     compiler_files = ":msvc_compiler_files",
@@ -185,6 +192,16 @@ cc_toolchain(
     objcopy_files = ":empty",
     strip_files = ":empty",
     supports_param_files = 1,
+)
+
+filegroup(
+    name = "msvc-wrappers",
+    srcs = [
+        "wrapper/cl.bat",
+        "wrapper/lib.bat",
+        "wrapper/link.bat",
+        "wrapper/ml64.bat",
+    ],
 )
 
 cc_toolchain_config(
@@ -201,23 +218,24 @@ cc_toolchain_config(
     msvc_env_path = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\Common7\\IDE\\VC\\VCPackages;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\bin\\Roslyn;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\Common7\\Tools\\devinit;C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0\\x64;C:\\Program Files (x86)\\Windows Kits\\10\\bin\\x64;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\\\MSBuild\\Current\\Bin;C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\Common7\\IDE\\;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\Common7\\Tools\\;;C:\\Windows\\system32;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin;C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja",
     msvc_env_include = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\include;C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\ucrt;C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\shared;C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\um;C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\winrt;C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\cppwinrt",
     msvc_env_lib = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\lib\\x64;C:\\Program Files (x86)\\Windows Kits\\10\\lib\\10.0.22621.0\\ucrt\\x64;C:\\Program Files (x86)\\Windows Kits\\10\\lib\\10.0.22621.0\\um\\x64",
-    msvc_cl_path = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/cl.exe",
-    msvc_ml_path = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/ml64.exe",
-    msvc_link_path = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/link.exe",
-    msvc_lib_path = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/lib.exe",
-    cxx_builtin_include_directories = [        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\include",
+    msvc_cl_path = "wrapper/cl.bat",
+    msvc_ml_path = "wrapper/ml64.bat",
+    msvc_link_path = "wrapper/link.bat",
+    msvc_lib_path = "wrapper/lib.bat",
+    cxx_builtin_include_directories = [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.29.30133\\include",
         "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\ucrt",
         "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\shared",
         "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\um",
         "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\winrt",
         "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.22621.0\\cppwinrt"],
     tool_paths = {
-        "ar": "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/lib.exe",
-        "ml": "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/ml64.exe",
-        "cpp": "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/cl.exe",
-        "gcc": "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/cl.exe",
+        "ar": "wrapper/lib.bat",
+        "ml": "wrapper/ml64.bat",
+        "cpp": "wrapper/cl.bat",
+        "gcc": "wrapper/cl.bat",
         "gcov": "wrapper/bin/msvc_nop.bat",
-        "ld": "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/link.exe",
+        "ld": "wrapper/link.bat",
         "nm": "wrapper/bin/msvc_nop.bat",
         "objcopy": "wrapper/bin/msvc_nop.bat",
         "objdump": "wrapper/bin/msvc_nop.bat",
