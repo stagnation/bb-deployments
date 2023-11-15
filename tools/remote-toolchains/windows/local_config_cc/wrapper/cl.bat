@@ -6,21 +6,15 @@ for %%a in (%*) do (
     if errorlevel 1 (
         REM echo ""
     ) else (
-        REM echo found
         set output=%%a
     )
 
 )
-REM echo %*
-REM echo "output: " %output%
 
 set dotd=%output%
-REM echo "dotd:" %dotd%
 call set dotd=%%dotd:/Fo=%""%%%
 call set dotd=%%dotd:.obj=".d"%%
-REM echo "dotd:" %dotd%
 
-REM copy /y NUL %dotd% >NUL
 echo . 2> %dotd% >NUL
 
 "%msvcpath%"\\cl.exe %* >NUL
