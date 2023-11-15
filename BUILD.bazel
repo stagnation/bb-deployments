@@ -42,6 +42,21 @@ gazelle(
     name = "gazelle",
 )
 
+# # Exhaust hardlinks for the source file in bb-worker
+#     ERROR: /home/nils/task/scaffold-repo/bb-deployments/BUILD.bazel:46:12: Executing genrule //:exhaust_hardlinks_1043 failed: (Exit 34): Remote Execution Failure:
+#     Internal: Failed to obtain input file "bazel-out/k8-fastbuild/bin/windows.txt":
+#     Failed to create hardlink to cached file "1-98ea6e4f216f2fb4b69fff9b3a44842c38686ca685f3f55dc48c5d3fb1107be4-3+x":
+#     An attempt was made to create more links on a file than the file system supports.
+[
+    genrule(
+        name = "exhaust_hardlinks_{}".format(n),
+        cmd = "echo ok > $(OUTS)",
+        outs = ["{}.txt".format(n)],
+        srcs = [":windows"],
+    )
+    for n in range(0)  # > 1024
+]
+
 genrule(
     name = "windows",
     tags = ["manual"],
