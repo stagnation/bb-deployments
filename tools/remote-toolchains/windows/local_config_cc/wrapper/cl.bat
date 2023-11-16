@@ -15,6 +15,6 @@ set dotd=%output%
 call set dotd=%%dotd:/Fo=%""%%%
 call set dotd=%%dotd:.obj=".d"%%
 
-echo . 2> %dotd% >NUL
+echo "Intentionally empty file to satisfy Bazel's predeclared output; MSVC does not produce .d files." > %dotd%
 
-"%msvcpath%"\\cl.exe %* >NUL
+"%msvcpath%"\\cl.exe %*
