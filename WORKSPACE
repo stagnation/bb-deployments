@@ -64,7 +64,10 @@ load("@bazel_gazelle//:deps.bzl", "go_repository")
 go_repository(
     name = "com_github_golang_mock",
     importpath = "github.com/golang/mock",
-    patches = ["@com_github_buildbarn_bb_storage_patches//:patches/com_github_golang_mock/mocks-for-funcs.diff"],
+    patches = [
+        "@com_github_buildbarn_bb_storage_patches//:patches/com_github_golang_mock/mocks-for-funcs.diff",
+        "@com_github_buildbarn_bb_remote_execution//:patches/com_github_golang_mock/generics.diff",
+    ],
     replace = "github.com/golang/mock",
     sum = "h1:DxRM2MRFDKF8JGaT1ZSsCZ9KxoOki+rrOoB011jIEDc=",
     version = "v1.6.1-0.20220512030613-73266f9366fc",
@@ -80,6 +83,15 @@ load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_depe
 go_rules_dependencies()
 
 go_register_toolchains(version = "1.21.5")
+
+load("@io_bazel_rules_docker//container:container.bzl", "container_pull")
+
+container_pull(
+    name = "busybox",
+    digest = "sha256:a2490cec4484ee6c1068ba3a05f89934010c85242f736280b35343483b2264b6",  # 1.31.1-uclibc
+    registry = "docker.io",
+    repository = "library/busybox",
+)
 
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
@@ -286,4 +298,14 @@ load("@googleapis//:repository_rules.bzl", "switched_rules_by_language")
 
 switched_rules_by_language(
     name = "com_google_googleapis_imports",
+)
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
+http_file(
+    name = "com_github_krallin_tini_tini_static_amd64",
+    downloaded_file_path = "tini",
+    executable = True,
+    sha256 = "eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33",
+    urls = ["https://github.com/krallin/tini/releases/download/v0.18.0/tini-static-amd64"],
 )
