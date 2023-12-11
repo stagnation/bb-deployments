@@ -55,14 +55,25 @@ http_archive(
     ],
 )
 
+load("@bazel_gazelle//:deps.bzl", "go_repository")
+
+# From bb-storage:
+# Override the version of gomock to one that includes support for
+# generating mocks for function types. We can't do this through go.mod,
+# as it causes almost all of our package dependencies to be downgraded.
+go_repository(
+    name = "com_github_golang_mock",
+    importpath = "github.com/golang/mock",
+    patches = ["@com_github_buildbarn_bb_storage_patches//:patches/com_github_golang_mock/mocks-for-funcs.diff"],
+    replace = "github.com/golang/mock",
+    sum = "h1:DxRM2MRFDKF8JGaT1ZSsCZ9KxoOki+rrOoB011jIEDc=",
+    version = "v1.6.1-0.20220512030613-73266f9366fc",
+)
+
 # gazelle:repository_macro go_dependencies.bzl%go_dependencies
 load(":go_dependencies.bzl", "go_dependencies")
 
 go_dependencies()
-
-load("@io_bazel_rules_docker//repositories:repositories.bzl", container_repositories = "repositories")
-
-container_repositories()
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
@@ -73,6 +84,18 @@ go_register_toolchains(version = "1.21.5")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
 gazelle_dependencies()
+
+load("@io_bazel_rules_docker//repositories:repositories.bzl", container_repositories = "repositories")
+
+container_repositories()
+
+load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
+
+container_deps()
+
+load("@io_bazel_rules_docker//go:image.bzl", _go_image_repos = "repositories")
+
+_go_image_repos()
 
 http_archive(
     name = "com_google_protobuf",

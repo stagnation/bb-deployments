@@ -1750,6 +1750,7 @@ def go_dependencies():
     go_repository(
         name = "org_golang_x_oauth2",
         importpath = "golang.org/x/oauth2",
+        patches = ["@com_github_buildbarn_bb_storage//:patches/org_golang_x_oauth2/injectable-clock.diff"],
         sum = "h1:aDkGMBSYxElaoP81NpoUoz2oo2R2wHdZpGToUxfyQrQ=",
         version = "v0.16.0",
     )
