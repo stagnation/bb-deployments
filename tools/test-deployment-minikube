@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# Verifies that the kuberenetes deployment works.
+
+set -eux -o pipefail -E
+
+script_dir=$(dirname "${BASH_SOURCE[0]}")
+root="$(realpath "$script_dir"/..)"
+cd "$root"
+
+abseil_output_base="abseil_output_base"
+
+working_directory="$(realpath tmp-test-bare)"
+mkdir "$working_directory"
+cd "$working_directory"
+
+# --- Launch kubernetes deployment with 'minikube' ---
+
+# NB: Minikube retains the persistent volume date between restarts
+# so we must delete the entire deployment.
+minikube delete
+minikube start
+minikube kubectl -- apply -k "$root"/kubernetes
+
+# Wait for pods to start
+# TODO: find a sophisticated solution
+sleep 50
+
+minikube kubectl -- -n buildbarn port-forward service/frontend 8980 &
+# NB: With kubectl and the minikube daemon
+# finding the pid of the port-forward
+# is a little bit involved.
+# It is not sufficient to take the job process id '$?'
+# TODO: Find a better 'ps' invocation to find the process.
+# TODO: This is only valid if no one had the port open before,
+# we do not want to kill unrelated programs.
+# # sleep 5
+# # port_forward_pid=$(lsof -i | grep 8980 | awk '{print $2}' | head -1)
+sleep 25
+
+cleanup() {
+    EXIT_STATUS=$?
+    # # kill "$port_forward_pid" || true
+    # # wait "$port_forward_pid" || true
+    rm -rf "$abseil_output_base"
+    rm -rf "$working_directory"
+    return "$EXIT_STATUS"
+}
+trap cleanup EXIT
+
+# --- Run remote execution ---
+bazel --output_base="$abseil_output_base" clean
+bazel --output_base="$abseil_output_base" \
+    test --color=no --curses=no --config=remote-local --disk_cache= \
+    --remote_instance_name= \
+    --remote_default_exec_properties OSFamily=linux \
+    --remote_default_exec_properties container-image="docker://ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448" \
+    @abseil-hello//:hello_test
+# Make sure there are remote executions but no cache hits.
+# INFO: 39 processes: 9 internal, 30 remote.
+grep -E '^INFO: [0-9]+ processes: .*[0-9]+ remote[.,]' \
+    "$abseil_output_base/command.log" \
+    | grep -v 'remote cache hit'
