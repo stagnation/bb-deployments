@@ -66,3 +66,10 @@ genrule(
         "OSFamily": "windows",
     },
 )
+
+genrule(
+    name = "fail",
+    tags = ["manual"],
+    cmd = """echo "error"; echo "hi" > $(OUTS); false""",
+    outs = ["fail.txt"],
+)

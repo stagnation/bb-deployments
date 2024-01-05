@@ -119,6 +119,7 @@ rules_cc_toolchains()
 
 register_toolchains(
     "@local_windows_config_cc_toolchains//:all",
+    "@local_windows_config_sh//:local_sh_toolchain",
     "@local_ubuntu_config_cc_toolchains//:all",
 )
 
