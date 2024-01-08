@@ -16,17 +16,23 @@ abseil_output_base="abseil_output_base"
 # It is better to have consistent configuration otherwise,
 # to make it easy to compare them.
 
+# NB: Open up the 'docker-compose' network to access the scheduler within 'minikube'.
+# With the default network docker images cannot access 'localhost',
+# so we change to the host network,
+# and then punt the diagnostic servers away from port 80.
+
 dockercompose_worker_config="$dockercompose_deployment"/config/worker-hardlinking-ubuntu22-04.jsonnet
+dockercompose_common_config="$dockercompose_deployment"/config/common.libsonnet
+dockercompose_config="$dockercompose_deployment"/docker-compose.yml
+kubernetes_worker_config="$root"/kubernetes/config/worker-ubuntu22-04.jsonnet
 dockercompose_instance_name_prefix=--remote_instance_name=dockercompose
 
 working_directory="$(realpath tmp-test-bare)"
 mkdir "$working_directory"
 
 # --- Launch kubernetes deployment with 'minikube' ---
-# NB: The properties must be lexicographically sorted.
-sed -i '/instanceNamePrefix/s#hardlinking#dockercompose#' "$dockercompose_worker_config"
-sed -i '/^\s*scheduler: {/s#scheduler:8983#localhost:8983#' "$dockercompose_worker_config"
 
+sed -i "/^\s*concurrency: /a instanceNamePrefix: 'kubernetes'" "$kubernetes_worker_config"
 # NB: Minikube retains the persistent volume date between restarts
 # so we must delete the entire deployment.
 minikube delete
@@ -35,12 +41,14 @@ minikube kubectl -- apply -k "$root"/kubernetes
 
 # Wait for pods to start
 # TODO: find a sophisticated solution
-sleep 50
+sleep 70
 
 # To allow bazel clients from outside
 minikube kubectl -- -n buildbarn port-forward service/frontend 8980 &
-# To allow buildbarn wotkers from outside
+# To allow buildbarn workers from outside
 minikube kubectl -- -n buildbarn port-forward service/scheduler 8983 &
+minikube kubectl -- -n buildbarn port-forward pod/storage-0 18981:8981 &
+minikube kubectl -- -n buildbarn port-forward pod/storage-1 28981:8981 &
 # TODO: To open the scheduler web ui
 minikube kubectl -- -n buildbarn port-forward service/scheduler 7982 &
 
@@ -57,9 +65,13 @@ sleep 25
 
 # --- Launch worker from 'docker-compose' ---
 cd "$dockercompose_deployment"
-# TODO: Remove the redirection when this works, for now the logs are annoying.
-docker-compose up runner-hardlinking-ubuntu22-04 worker-hardlinking-ubuntu22-04 \
-    2>/dev/null &
+sed -i '/instanceNamePrefix/s#hardlinking#dockercompose#' "$dockercompose_worker_config"
+sed -i "/^\s*scheduler: {/s/scheduler:8983/localhost:8983/" "$dockercompose_worker_config"
+sed -i "/listenAddresses:/s#':80'#':11180'#" "$dockercompose_common_config"
+sed -i "/^\s*worker-hardlinking-ubuntu22-04:/a \    network_mode: host" "$dockercompose_config"
+sed -i "s/storage-0:8981/localhost:18981/" "$dockercompose_common_config"
+sed -i "s/storage-1:8981/localhost:28981/" "$dockercompose_common_config"
+docker-compose up runner-hardlinking-ubuntu22-04 worker-hardlinking-ubuntu22-04 &
 
 cleanup() {
     EXIT_STATUS=$?
@@ -70,7 +82,12 @@ cleanup() {
     cd "$dockercompose_deployment"
     docker-compose down
     sed -i '/instanceNamePrefix/s#dockercompose#hardlinking#' "$dockercompose_worker_config"
-    sed -i '/^\s*scheduler: {/s#localhost:8983#scheduler:8983#' "$dockercompose_worker_config"
+    sed -i "/^\s*scheduler: {/s#localhost:8983#scheduler:8983#" "$dockercompose_worker_config"
+    sed -i "/instanceNamePrefix: 'kubernetes'/d" "$kubernetes_worker_config"
+    sed -i "/listenAddresses:/s#':11180'#':80'#" "$dockercompose_common_config"
+    sed -i "s/localhost:18981/storage-0:8981/" "$dockercompose_common_config"
+    sed -i "s/localhost:28981/storage-1:8981/" "$dockercompose_common_config"
+    sed -i "/network_mode: host/d" "$dockercompose_config"
     return "$EXIT_STATUS"
 }
 trap cleanup EXIT
