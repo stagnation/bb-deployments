@@ -5,7 +5,6 @@ bazel clean && \
     --features=compiler_param_file \
     --remote_executor=grpc://localhost:8980 \
     --remote_instance_name="" \
-    --remote_default_exec_properties OSFamily=windows \
     --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64 \
     --extra_execution_platforms=//tools/remote-toolchains:windows-platform \
     "$@"
