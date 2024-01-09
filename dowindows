@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
+    # # rules_go is stupid, and does not resolve platforms correctly,
+    # # if we tell it to use Windows it will,
+    # # but that primes the general toolchain resolution to use windows.
+    # --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64 \
+    # # Unsure if we can later reset it,
+    # # better to have it explicit on the command line for now.
+    # --@//settings:cross-compiler=mingw \
 bazel clean && \
     bazel build \
     --features=compiler_param_file \
     --remote_executor=grpc://localhost:8980 \
     --remote_instance_name="" \
-    --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64 \
-    --extra_execution_platforms=//tools/remote-toolchains:windows-platform \
     "$@"

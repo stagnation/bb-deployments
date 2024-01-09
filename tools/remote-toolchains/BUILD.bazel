@@ -16,7 +16,7 @@ constraint_value(
 
 REMOTE_WINDOWS_TARGET_CONSTRAINTS = [
     "@platforms//cpu:x86_64",
-    "@platforms//os:windows",
+    "@platforms//os:linux",
 ]
 REMOTE_LINUX_TARGET_CONSTRAINTS = [
     "@platforms//cpu:x86_64",

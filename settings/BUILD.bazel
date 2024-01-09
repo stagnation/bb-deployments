@@ -1,0 +1,26 @@
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+
+#              / ---- Gcc default build
+# deliverable -
+#              \ ---- mingw cross builds
+#
+# Gcc is the default.
+
+string_flag(
+    name = "cross-compiler",
+    values = [
+        "mingw",
+        "gcc",
+    ],
+    build_setting_default = "gcc",
+)
+
+config_setting(
+    name = "cross-compiler-mingw",
+    flag_values = {":cross-compiler": "mingw"},
+)
+
+config_setting(
+    name = "cross-compiler-gcc",
+    flag_values = {":cross-compiler": "gcc"},
+)

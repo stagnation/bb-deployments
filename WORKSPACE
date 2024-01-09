@@ -118,8 +118,14 @@ rules_cc_dependencies()
 rules_cc_toolchains()
 
 register_toolchains(
+    "@remote_windows_config_cc//:cc-toolchain-x64_windows",  # High priority cross-compiling toolchain, requires special constrain_values to activate.
     "@local_windows_config_cc_toolchains//:all",
     "@local_ubuntu_config_cc_toolchains//:all",
+)
+
+register_execution_platforms(
+    "@//tools/remote-toolchains:ubuntu-act-22-04-platform",
+    "@//tools/remote-toolchains:windows-platform",
 )
 
 # Import toolchain repositories for remote executions, but register the

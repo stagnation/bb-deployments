@@ -169,7 +169,9 @@ toolchain(
     exec_compatible_with = [
         "@platforms//cpu:x86_64",
         "@platforms//os:windows",
-        "@rules_cc//cc/private/toolchain:mingw",
+    ],
+    target_settings = [
+        "@//settings:cross-compiler-mingw",
     ],
     target_compatible_with = [
         "@platforms//cpu:x86_64",
