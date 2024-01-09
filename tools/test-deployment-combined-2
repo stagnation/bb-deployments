@@ -14,7 +14,7 @@ cd "$root"
 abseil_output_base="abseil_output_base"
 
 # We want special instance name prefix for this test,
-# to make sure the workers within the 'docker-compose' deployment are used.
+# to make sure the workers within the 'kubernetes' deployment are used.
 # But we do not want permanent changes to their configurations.
 # It is better to have consistent configuration otherwise,
 # to make it easy to compare them.
@@ -27,9 +27,9 @@ abseil_output_base="abseil_output_base"
 dockercompose_common_config="$dockercompose_deployment"/config/common.libsonnet
 dockercompose_config="$dockercompose_deployment"/docker-compose.yml
 kubernetes_worker_config="$root"/kubernetes/config/worker-ubuntu22-04.jsonnet
-dockercompose_instance_name_prefix=--remote_instance_name=dockercompose
+kubernetes_instance_name_prefix=--remote_instance_name=kubernetes
 
-working_directory="$(realpath tmp-test-bare)"
+working_directory="$(realpath tmp-test)"
 mkdir "$working_directory"
 
 # --- Launch kubernetes deployment with 'minikube' ---
@@ -44,25 +44,6 @@ minikube kubectl -- apply -k "$root"/kubernetes
 # Wait for pods to start
 # TODO: find a sophisticated solution
 sleep 70
-
-# To allow bazel clients from outside
-minikube kubectl -- -n buildbarn port-forward service/frontend 8980 &
-# To allow buildbarn workers from outside
-minikube kubectl -- -n buildbarn port-forward service/scheduler 8983 &
-minikube kubectl -- -n buildbarn port-forward pod/storage-0 18981:8981 &
-minikube kubectl -- -n buildbarn port-forward pod/storage-1 28981:8981 &
-# TODO: To open the scheduler web ui
-minikube kubectl -- -n buildbarn port-forward service/scheduler 7982 &
-
-# NB: With kubectl and the minikube daemon
-# finding the pid of the port-forward
-# is a little bit involved.
-# It is not sufficient to take the job process id '$?'
-# TODO: Find a better 'ps' invocation to find the process.
-# TODO: This is only valid if no one had the port open before,
-# we do not want to kill unrelated programs.
-# # sleep 5
-# # port_forward_pid=$(lsof -i | grep 8980 | awk '{print $2}' | head -1)
 sleep 25
 
 # --- Launch worker from 'docker-compose' ---
@@ -100,7 +81,7 @@ cd "$working_directory"
 bazel --output_base="$abseil_output_base" clean
 bazel --output_base="$abseil_output_base" \
     test --color=no --curses=no --config=remote-local --disk_cache= \
-    "$dockercompose_instance_name_prefix" \
+    "$kubernetes_instance_name_prefix" \
     --remote_default_exec_properties OSFamily=linux \
     --remote_default_exec_properties container-image="docker://ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448" \
     @abseil-hello//:hello_test
