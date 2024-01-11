@@ -254,6 +254,9 @@ toolchain(
         "@platforms//cpu:x86_64",
         "@platforms//os:windows",
     ],
+    target_settings = [
+        "@//settings:cross-compiler-mingw",
+    ],
     target_compatible_with = [
         "@platforms//cpu:x86_64",
         "@platforms//os:windows",
