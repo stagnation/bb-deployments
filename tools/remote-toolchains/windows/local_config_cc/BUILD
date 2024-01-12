@@ -181,6 +181,7 @@ toolchain(
     toolchain_type = "@rules_cc//cc:toolchain_type",
 )
 
+# USE THIS
 cc_toolchain(
     name = "cc-compiler-x64_windows",
     toolchain_identifier = "msvc_x64",
@@ -206,6 +207,7 @@ filegroup(
     ],
 )
 
+# USE THIS
 cc_toolchain_config(
     name = "msvc_x64",
     cpu = "x64_windows",
@@ -248,6 +250,7 @@ cc_toolchain_config(
     fastbuild_mode_debug_flag = "/DEBUG:FASTLINK",
 )
 
+# USE THIS
 toolchain(
     name = "cc-toolchain-x64_windows",
     exec_compatible_with = [
@@ -255,7 +258,7 @@ toolchain(
         "@platforms//os:windows",
     ],
     target_settings = [
-        "@//settings:cross-compiler-mingw",
+        "@//settings:cross-compiler-msvc",
     ],
     target_compatible_with = [
         "@platforms//cpu:x86_64",
