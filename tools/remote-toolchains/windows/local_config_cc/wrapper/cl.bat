@@ -7,11 +7,13 @@ setlocal EnableDelayedExpansion
 set "paramfile=%~1"
 echo %paramfile | findstr /b /C:"@" 1>nul
 if errorlevel 1 (
+    REM Free arguments, iterate through them to find the output file path.
     for %%a in (%*) do (
         echo %%a | findstr /C:"/Fo" 1>nul
         if errorlevel 1 (
-            REM echo ""
+            echo "Unable to find the /Fo flag"
         ) else (
+            echo "Argument: %%a"
             set dotd=%%a
             call set dotd=%%dotd:/Fo=%""%%%
             call set dotd=%%dotd:.obj=".d"%%
@@ -19,6 +21,7 @@ if errorlevel 1 (
         )
     )
 ) else (
+    REM Parameter file
     set dotd=%paramfile%
     call set dotd=%%dotd:@=%%
     call set dotd=%%dotd:.params=%%
@@ -32,6 +35,7 @@ exit /B 101
 
 :success
 
+echo "writing to dotd file: %dotd%"
 echo "Intentionally empty file to satisfy Bazel's predeclared output; MSVC does not produce .d files." > %dotd%
 
 "%msvcpath%"\\cl.exe %*
