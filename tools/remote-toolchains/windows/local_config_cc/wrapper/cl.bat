@@ -4,8 +4,14 @@
 set msvcpath=C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64
 setlocal EnableDelayedExpansion
 
+findstr /? >nul 2>&1
+if errorlevel 1 (
+    echo findstr not available!
+    exit /B 103
+)
+
 set "paramfile=%~1"
-echo %paramfile | findstr /b /C:"@" 1>nul
+echo %paramfile% | findstr /b /C:"@" 1>nul
 if errorlevel 1 (
     REM Free arguments, iterate through them to find the output file path.
     for %%a in (%*) do (

@@ -1,12 +1,12 @@
 load("@bazel_gazelle//:def.bzl", "gazelle")
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 
-genrule(
-    name = "with-docker",
-    outs = ["with-docker.out"],
-    cmd = """echo "hi" > $(OUTS)""",
-    # tags = ["no-cache"],
-)
+# genrule(
+#     name = "with-docker",
+#     outs = ["with-docker.out"],
+#     cmd = """echo "hi" > $(OUTS)""",
+#     # tags = ["no-cache"],
+# )
 
 # genrule(
 #     name = "with-ubuntu-docker",
@@ -30,11 +30,11 @@ genrule(
 #     # tags = ["no-cache"],
 # )
 
-genrule(
-    name = "with-docker-cache",
-    outs = ["with-docker-cache.out"],
-    cmd = """echo "hi" > $(OUTS)""",
-)
+# genrule(
+#     name = "with-docker-cache",
+#     outs = ["with-docker-cache.out"],
+#     cmd = """echo "hi" > $(OUTS)""",
+# )
 
 # gazelle:prefix github.com/buildbarn/bb-deployments
 # gazelle:exclude dummy_for_dependencies.go

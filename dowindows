@@ -11,5 +11,5 @@ bazel clean && \
     bazel build \
     --features=compiler_param_file \
     --remote_executor=grpc://localhost:8980 \
-    --remote_instance_name="" \
+    --remote_instance_name="remote-execution" \
     "$@"
