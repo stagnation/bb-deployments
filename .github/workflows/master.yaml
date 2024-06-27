@@ -102,7 +102,11 @@
             {
                "name": "windows_amd64: build and test",
                "run": "bazel build --platforms=@rules_go//go/toolchain:windows_amd64 //..."
-            }
+            },
+            {
+              "name": "bazel mod integrity",
+              "run": "bazel mod graph"
+            },
          ]
       }
    },
