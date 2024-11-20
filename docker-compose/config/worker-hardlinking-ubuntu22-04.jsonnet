@@ -1,4 +1,5 @@
 local common = import 'common.libsonnet';
+local runnerCount = 9;
 
 // DO NOT USE the hardlinking configuration below unless really needed.
 // This example only exists for reference in situations
@@ -11,15 +12,15 @@ local common = import 'common.libsonnet';
   global: common.global,
   buildDirectories: [{
     native: {
-      buildDirectoryPath: '/worker/build',
-      cacheDirectoryPath: '/worker/cache',
+      buildDirectoryPath: '/worker/%d/build' % index,
+      cacheDirectoryPath: '/worker/%d/cache' % index,
       maximumCacheFileCount: 10000,
       maximumCacheSizeBytes: 1024 * 1024 * 1024,
       cacheReplacementPolicy: 'LEAST_RECENTLY_USED',
     },
     runners: [{
-      endpoint: { address: 'unix:///worker/runner' },
-      concurrency: 8,
+      endpoint: { address: 'unix:///worker/%d/runner' % index },
+      concurrency: 1,
       instanceNamePrefix: 'hardlinking',
       platform: {
         properties: [
@@ -31,12 +32,12 @@ local common = import 'common.libsonnet';
         datacenter: 'linkoping',
         rack: '4',
         slot: '15',
-        hostname: 'ubuntu-worker.example.com',
+        hostname: 'ubuntu-worker%d.example.com' % index,
       },
     }],
-  }],
-  inputDownloadConcurrency: 10,
-  outputUploadConcurrency: 11,
+  } for index in std.range(0, runnerCount - 1)],
+  inputDownloadConcurrency: std.max(10, runnerCount),
+  outputUploadConcurrency: std.max(11, runnerCount),
   directoryCache: {
     maximumCount: 1000,
     maximumSizeBytes: 1000 * 1024,

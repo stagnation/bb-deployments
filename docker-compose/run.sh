@@ -11,11 +11,19 @@ setup () {
     set -x
 
     { sudo fusermount -u "$fuse_dir_to_unmount" && sleep 1; } || true
-    sudo rm -rf volumes/bb "volumes/${worker_fuse}" "volumes/${worker_hardlinking}"
+    sudo rm -rf volumes/bb "volumes/${worker_fuse}" "volumes/*/${worker_hardlinking}"
 
     mkdir -p volumes
+    mkdir -m 0777 "volumes/$worker_hardlinking"
+    mkdir -m 0777 "volumes/$worker_hardlinking"/{cas,cas/persistent_state}
+    for index in $(seq 0 8); do
+        individual=volumes/$worker_hardlinking/$index
+        mkdir -m 0777 "$individual"
+        mkdir -m 0777 "$individual"/build
+        mkdir -m 0700 "$individual"/cache
+    done
+
     mkdir -m 0777 "volumes/${worker_fuse}" "volumes/${worker_fuse}"/{build,cas,cas/persistent_state}
-    mkdir -m 0777 "volumes/${worker_hardlinking}" "volumes/${worker_hardlinking}"/{build,cas,cas/persistent_state}
     mkdir -m 0700 "volumes/${worker_fuse}/cache" "volumes/${worker_hardlinking}/cache"
     mkdir -p volumes/storage-{ac,cas}-{0,1}/persistent_state
     chmod 0700 volumes/storage-{ac,cas}-{0,1}/{,persistent_state}

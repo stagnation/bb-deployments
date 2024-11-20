@@ -113,7 +113,7 @@ services:
     - ./config:/config
     - ./volumes/worker-hardlinking-ubuntu22-04:/worker
 
-  runner-hardlinking-ubuntu22-04:
+  runner-hardlinking-ubuntu22-04_0:
     image: ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448
     command:
     - sh
@@ -123,6 +123,118 @@ services:
     volumes:
     - ./config:/config
     - ./volumes/bb:/bb
-    - ./volumes/worker-hardlinking-ubuntu22-04:/worker
+    - ./volumes/worker-hardlinking-ubuntu22-04/0:/worker
+    depends_on:
+    - runner-installer
+
+  runner-hardlinking-ubuntu22-04_1:
+    image: ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448
+    command:
+    - sh
+    - -c
+    - while ! test -f /bb/installed; do sleep 1; done; exec /bb/tini -v -- /bb/bb_runner /config/runner-ubuntu22-04.jsonnet
+    network_mode: none
+    volumes:
+    - ./config:/config
+    - ./volumes/bb:/bb
+    - ./volumes/worker-hardlinking-ubuntu22-04/1:/worker
+    depends_on:
+    - runner-installer
+
+  runner-hardlinking-ubuntu22-04_2:
+    image: ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448
+    command:
+    - sh
+    - -c
+    - while ! test -f /bb/installed; do sleep 1; done; exec /bb/tini -v -- /bb/bb_runner /config/runner-ubuntu22-04.jsonnet
+    network_mode: none
+    volumes:
+    - ./config:/config
+    - ./volumes/bb:/bb
+    - ./volumes/worker-hardlinking-ubuntu22-04/2:/worker
+    depends_on:
+    - runner-installer
+
+  runner-hardlinking-ubuntu22-04_3:
+    image: ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448
+    command:
+    - sh
+    - -c
+    - while ! test -f /bb/installed; do sleep 1; done; exec /bb/tini -v -- /bb/bb_runner /config/runner-ubuntu22-04.jsonnet
+    network_mode: none
+    volumes:
+    - ./config:/config
+    - ./volumes/bb:/bb
+    - ./volumes/worker-hardlinking-ubuntu22-04/3:/worker
+    depends_on:
+    - runner-installer
+
+  runner-hardlinking-ubuntu22-04_4:
+    image: ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448
+    command:
+    - sh
+    - -c
+    - while ! test -f /bb/installed; do sleep 1; done; exec /bb/tini -v -- /bb/bb_runner /config/runner-ubuntu22-04.jsonnet
+    network_mode: none
+    volumes:
+    - ./config:/config
+    - ./volumes/bb:/bb
+    - ./volumes/worker-hardlinking-ubuntu22-04/4:/worker
+    depends_on:
+    - runner-installer
+
+  runner-hardlinking-ubuntu22-04_5:
+    image: ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448
+    command:
+    - sh
+    - -c
+    - while ! test -f /bb/installed; do sleep 1; done; exec /bb/tini -v -- /bb/bb_runner /config/runner-ubuntu22-04.jsonnet
+    network_mode: none
+    volumes:
+    - ./config:/config
+    - ./volumes/bb:/bb
+    - ./volumes/worker-hardlinking-ubuntu22-04/5:/worker
+    depends_on:
+    - runner-installer
+
+  runner-hardlinking-ubuntu22-04_6:
+    image: ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448
+    command:
+    - sh
+    - -c
+    - while ! test -f /bb/installed; do sleep 1; done; exec /bb/tini -v -- /bb/bb_runner /config/runner-ubuntu22-04.jsonnet
+    network_mode: none
+    volumes:
+    - ./config:/config
+    - ./volumes/bb:/bb
+    - ./volumes/worker-hardlinking-ubuntu22-04/6:/worker
+    depends_on:
+    - runner-installer
+
+  runner-hardlinking-ubuntu22-04_7:
+    image: ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448
+    command:
+    - sh
+    - -c
+    - while ! test -f /bb/installed; do sleep 1; done; exec /bb/tini -v -- /bb/bb_runner /config/runner-ubuntu22-04.jsonnet
+    network_mode: none
+    volumes:
+    - ./config:/config
+    - ./volumes/bb:/bb
+    - ./volumes/worker-hardlinking-ubuntu22-04/7:/worker
+    depends_on:
+    - runner-installer
+
+  runner-hardlinking-ubuntu22-04_8:
+    image: ghcr.io/catthehacker/ubuntu:act-22.04@sha256:5f9c35c25db1d51a8ddaae5c0ba8d3c163c5e9a4a6cc97acd409ac7eae239448
+    command:
+    - sh
+    - -c
+    - while ! test -f /bb/installed; do sleep 1; done; exec /bb/tini -v -- /bb/bb_runner /config/runner-ubuntu22-04.jsonnet
+    network_mode: none
+    volumes:
+    - ./config:/config
+    - ./volumes/bb:/bb
+    - ./volumes/worker-hardlinking-ubuntu22-04/8:/worker
     depends_on:
     - runner-installer
