@@ -34,9 +34,9 @@ at the top right in the GitHub Actions page.
 
 | Repository | Container images and binaries |
 | ---------- | ----------------------------- |
-| [bb-browser](https://github.com/buildbarn/bb-browser) [`9b44996f7d`](https://github.com/buildbarn/bb-browser/commits/9b44996f7d6a04185f61e7752cbe8649aaa59f16)<br/>2025-04-14 18:07:39 UTC | [ghcr.io/buildbarn/bb-browser:20250414T180739Z-9b44996](https://ghcr.io/buildbarn/bb-browser:20250414T180739Z-9b44996)<br/>[CI artifacts](https://github.com/buildbarn/bb-browser/actions/runs/14452582814) |
-| [bb-remote-execution](https://github.com/buildbarn/bb-remote-execution) [`1c726bdc27`](https://github.com/buildbarn/bb-remote-execution/commits/1c726bdc27e7793c685d8788913f8f91f59bc887)<br/>2025-04-11 12:43:10 UTC | [ghcr.io/buildbarn/bb-runner-installer:20250411T124310Z-1c726bd](https://ghcr.io/buildbarn/bb-runner-installer:20250411T124310Z-1c726bd)<br/>[ghcr.io/buildbarn/bb-scheduler:20250411T124310Z-1c726bd](https://ghcr.io/buildbarn/bb-scheduler:20250411T124310Z-1c726bd)<br/>[ghcr.io/buildbarn/bb-worker:20250411T124310Z-1c726bd](https://ghcr.io/buildbarn/bb-worker:20250411T124310Z-1c726bd)<br/>[CI artifacts](https://github.com/buildbarn/bb-remote-execution/actions/runs/14403397088) |
-| [bb-storage](https://github.com/buildbarn/bb-storage) [`1d733a3748`](https://github.com/buildbarn/bb-storage/commits/1d733a37487a01416bda38eff6f61eb78103c7f0)<br/>2025-04-08 11:21:16 UTC | [ghcr.io/buildbarn/bb-storage:20250408T112116Z-1d733a3](https://ghcr.io/buildbarn/bb-storage:20250408T112116Z-1d733a3)<br/>[CI artifacts](https://github.com/buildbarn/bb-storage/actions/runs/14332223689) |
+| [bb-browser](https://github.com/buildbarn/bb-browser) [`5d2ed98e07`](https://github.com/buildbarn/bb-browser/commits/5d2ed98e07561fdad8b50d995e9b1a76d4a96450)<br/>2025-08-14 05:23:51 UTC | [ghcr.io/buildbarn/bb-browser:20250814T052351Z-5d2ed98](https://ghcr.io/buildbarn/bb-browser:20250814T052351Z-5d2ed98)<br/>[CI artifacts](https://github.com/buildbarn/bb-browser/actions/runs/16956646741) |
+| [bb-remote-execution](https://github.com/buildbarn/bb-remote-execution) [`0ef36fa4ed`](https://github.com/buildbarn/bb-remote-execution/commits/0ef36fa4ed17c2b9667f163d91fb10e9ace946f7)<br/>2025-08-15 08:21:54 UTC | [ghcr.io/buildbarn/bb-runner-installer:20250815T082154Z-0ef36fa](https://ghcr.io/buildbarn/bb-runner-installer:20250815T082154Z-0ef36fa)<br/>[ghcr.io/buildbarn/bb-scheduler:20250815T082154Z-0ef36fa](https://ghcr.io/buildbarn/bb-scheduler:20250815T082154Z-0ef36fa)<br/>[ghcr.io/buildbarn/bb-worker:20250815T082154Z-0ef36fa](https://ghcr.io/buildbarn/bb-worker:20250815T082154Z-0ef36fa)<br/>[CI artifacts](https://github.com/buildbarn/bb-remote-execution/actions/runs/16986114608) |
+| [bb-storage](https://github.com/buildbarn/bb-storage) [`75021325d8`](https://github.com/buildbarn/bb-storage/commits/75021325d8dc0aceffc4014a1e355e2f9b7f3202)<br/>2025-08-18 21:10:16 UTC | [ghcr.io/buildbarn/bb-storage:20250818T211016Z-7502132](https://ghcr.io/buildbarn/bb-storage:20250818T211016Z-7502132)<br/>[CI artifacts](https://github.com/buildbarn/bb-storage/actions/runs/17052600168) |
 
 ## Changelog
 
@@ -199,6 +199,23 @@ bazelisk run //:buildifier.check
 # Update the Kubernetes and Docker compose deployments.
 ./tools/update-container-image-versions.sh
 ```
+
+## Update MODULE.bazel
+
+After updating all the go deps we must also update the module file
+to be roughly in sync with the other Buildbarn components.
+bb-storage and bb-remote-execution often differ a bit,
+then we to lean towards the storage view.
+And apply any manual fix-ups to make sure everything builds.
+
+The most important goal of the repo is to have the images
+and the configurations consistent which does not involve the module file.
+But its secondary goal is as a development substrate
+and best-effort collection of module versions that can build together.
+The foremost consumer of that is the bare deployment that build
+all the components from source.
+
+Acceptance criteria on maintaining the module is that the bare deployment works.
 
 ## Formatting
 
